@@ -150,12 +150,8 @@
                             </button>
                             <input type="range" id="zoom-slider" min="50" max="200" value="100" class="zoom-slider">
                             <button id="btn-zoom-reset" class="btn btn-text">พอดีหน้าจอ</button>
-                        </div>
-                        
-                        <div class="toolbar-group">
-                            <button id="btn-download-pdf" class="btn btn-primary">
+                            <button id="btn-download-pdf" class="btn btn-secondary btn-icon-only btn-circle-download" title="ดาวน์โหลดใบความรู้">
                                 <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-                                <span>ดาวน์โหลดใบความรู้</span>
                             </button>
                         </div>
                     </div>
@@ -367,63 +363,63 @@
                         </div>
                     </div>
 
-                    <div class="form-section-title">การบริหารจัดการไฟล์ใบความรู้ (PDF) แยกตามวันสำคัญ</div>
-                    <p class="section-hint">* คุณครูสามารถเลือกอัปโหลดไฟล์ PDF ของตัวเอง เพื่อให้นักเรียนเปิดอ่านและซูมดูแยกตามแต่ละวันสำคัญด้านล่างนี้ได้</p>
+                    <div class="form-section-title">การบริหารจัดการไฟล์ใบความรู้สำหรับดาวน์โหลด (JPG/PNG) แยกตามวันสำคัญ</div>
+                    <p class="section-hint">* คุณครูสามารถอัปโหลดรูปภาพใบความรู้สำหรับดาวน์โหลด (แนะนำไฟล์ JPG หรือ PNG) ทดแทนไฟล์เริ่มต้นได้</p>
                     
                     <div class="pdf-management-list">
                         <div class="pdf-manage-item" data-holiday-idx="0">
                             <span class="p-manage-name">1. วันมาฆบูชา</span>
-                            <span class="p-status-label" id="pdf-status-0">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-0">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="0" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="0" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="0" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="0" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                         <div class="pdf-manage-item" data-holiday-idx="1">
                             <span class="p-manage-name">2. วันวิสาขบูชา</span>
-                            <span class="p-status-label" id="pdf-status-1">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-1">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="1" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="1" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="1" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="1" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                         <div class="pdf-manage-item" data-holiday-idx="2">
                             <span class="p-manage-name">3. วันอาสาฬหบูชา</span>
-                            <span class="p-status-label" id="pdf-status-2">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-2">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="2" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="2" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="2" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="2" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                         <div class="pdf-manage-item" data-holiday-idx="3">
                             <span class="p-manage-name">4. วันเข้าพรรษา</span>
-                            <span class="p-status-label" id="pdf-status-3">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-3">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="3" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="3" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="3" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="3" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                         <div class="pdf-manage-item" data-holiday-idx="4">
                             <span class="p-manage-name">5. วันออกพรรษา</span>
-                            <span class="p-status-label" id="pdf-status-4">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-4">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="4" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="4" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="4" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="4" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                         <div class="pdf-manage-item" data-holiday-idx="5">
                             <span class="p-manage-name">6. วันอัฏฐมีบูชา</span>
-                            <span class="p-status-label" id="pdf-status-5">ใช้ใบความรู้ระบบเริ่มต้น</span>
+                            <span class="p-status-label" id="pdf-status-5">ใช้รูปภาพดาวน์โหลดเริ่มต้น</span>
                             <label class="btn btn-secondary btn-sm-file">
-                                <span>เลือกอัปโหลดไฟล์ PDF</span>
-                                <input type="file" class="cfg-pdf-picker" data-idx="5" accept="application/pdf">
+                                <span>เลือกอัปโหลดไฟล์ภาพ</span>
+                                <input type="file" class="cfg-pdf-picker" data-idx="5" accept="image/*">
                             </label>
-                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="5" style="display: none;">กลับไปใช้ใบความรู้เริ่มต้น</button>
+                            <button type="button" class="btn btn-text btn-danger btn-reset-pdf" data-idx="5" style="display: none;">กลับไปใช้รูปภาพเริ่มต้น</button>
                         </div>
                     </div>
 

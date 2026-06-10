@@ -465,6 +465,7 @@ let currentHolidayIndex = 0;
 let currentZoom = 100;
 let isDragging = false;
 let startX, startY, scrollLeft, scrollTop;
+let mainViewScrollY = 0;
 
 // Default Settings (ครูและวิชาเริ่มต้น)
 const DEFAULT_SETTINGS = {
@@ -703,11 +704,11 @@ async function updateModalPDFStatuses() {
         
         if (statusLabel) {
             if (hasCustom) {
-                statusLabel.textContent = "ใช้ไฟล์ PDF ที่อัปโหลดแล้ว";
+                statusLabel.textContent = "ใช้รูปภาพที่อัปโหลดแล้ว";
                 statusLabel.classList.add("has-uploaded");
                 if (resetBtn) resetBtn.style.display = "inline-block";
             } else {
-                statusLabel.textContent = "ใช้ใบความรู้ระบบเริ่มต้น";
+                statusLabel.textContent = "ใช้รูปภาพดาวน์โหลดเริ่มต้น";
                 statusLabel.classList.remove("has-uploaded");
                 if (resetBtn) resetBtn.style.display = "none";
             }
@@ -748,11 +749,22 @@ function renderHolidaysGrid() {
     const grid = document.getElementById("holidays-grid");
     grid.innerHTML = "";
 
+    // คลาสปุ่มสีสันต่างกันตามวันสำคัญ
+    const buttonClasses = [
+        "",                 // วันมาฆบูชา (ใช้สีทองเริ่มต้น)
+        "btn-visakha",      // วันวิสาขบูชา
+        "btn-asanha",       // วันอาสาฬหบูชา
+        "btn-khao-phansa",  // วันเข้าพรรษา
+        "btn-ok-phansa",    // วันออกพรรษา
+        "btn-athami"        // วันอัฐมีบูชา
+    ];
+
     HOLIDAYS_DATA.forEach((holiday, idx) => {
         const card = document.createElement("div");
         card.className = "holiday-card";
         const customImg = appSettings[`holiday_${idx}_img`];
         const cardImgSrc = customImg && customImg !== "" ? customImg : holiday.posterPath;
+        const btnClass = buttonClasses[idx] || "";
         card.innerHTML = `
             <div class="card-img-wrapper">
                 <img src="${cardImgSrc}" alt="${holiday.title}">
@@ -763,7 +775,7 @@ function renderHolidaysGrid() {
                 <div class="card-body-en">${holiday.titleEn}</div>
                 <p class="card-desc">${holiday.shortDesc}</p>
                 <div class="card-actions">
-                    <button class="btn btn-primary btn-study" data-idx="${idx}">
+                    <button class="btn btn-primary btn-study ${btnClass}" data-idx="${idx}">
                         <span>ศึกษาบทเรียน</span>
                         <svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                     </button>
@@ -795,11 +807,19 @@ function showView(viewId) {
         activeView.classList.add("active");
     }
 
-    // Scroll to top with safe fallback for older browsers
-    try {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err) {
-        window.scrollTo(0, 0);
+    if (viewId === "main-view") {
+        try {
+            window.scrollTo({ top: mainViewScrollY, behavior: "instant" });
+        } catch (err) {
+            window.scrollTo(0, mainViewScrollY);
+        }
+    } else {
+        // Scroll to top with safe fallback for older browsers
+        try {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (err) {
+            window.scrollTo(0, 0);
+        }
     }
 }
 
@@ -810,11 +830,14 @@ async function openHolidayDetails(idx) {
     currentHolidayIndex = idx;
     const data = HOLIDAYS_DATA[idx];
 
+    // บันทึกตำแหน่งการเลื่อนหน้าจอก่อนเข้าหน้าเนื้อหา
+    mainViewScrollY = window.scrollY;
+
     // 1. ตั้งค่าชื่อบทเรียน
     document.getElementById("current-holiday-title").textContent = data.title;
     document.getElementById("current-holiday-title-en").textContent = data.titleEn;
 
-    // 2. โหลดใบความรู้ PDF
+    // 2. โหลดใบความรู้ PDF (รูปภาพ)
     await loadPDFViewer(idx);
 
     // 3. รีเซ็ตซูม
@@ -895,26 +918,38 @@ async function loadPDFViewer(holidayIdx) {
 
 // Zoom control functions
 function setZoom(zoomVal) {
-    // จำกัดช่วงการขยาย 50% - 200%
-    currentZoom = Math.max(50, Math.min(200, zoomVal));
+    // จำกัดช่วงการขยาย 30% - 200%
+    currentZoom = Math.max(30, Math.min(200, zoomVal));
     
     // อัปเดต Display เปอร์เซ็นต์
     document.getElementById("zoom-percent-display").textContent = `${currentZoom}%`;
     document.getElementById("zoom-slider").value = currentZoom;
 
-    // อัปเดต Style Zoom บนแคนวาสห่อหุ้ม
+    // อัปเดตขนาดจริงของแคนวาสห่อหุ้ม เพื่อให้มีผลต่อ Layout พื้นที่ และเกิด Scrollbar จริง 4 ทิศทาง
     const canvas = document.getElementById("pdf-canvas-wrapper");
-    canvas.style.transform = `scale(${currentZoom / 100})`;
+    if (canvas) {
+        canvas.style.transform = "none";
+        canvas.style.width = `${800 * (currentZoom / 100)}px`;
+        canvas.style.maxWidth = "none";
+    }
+
+    const container = document.getElementById("worksheet-img-container");
+    if (container) {
+        container.style.maxWidth = "none";
+        container.style.width = "100%";
+    }
 
     // ถ้าซูมมากกว่า 100% ให้แสดงมือลากจับขยับได้ (Pan)
     const viewport = document.getElementById("pdf-viewport");
-    if (currentZoom > 100) {
-        viewport.classList.add("zoomed");
-    } else {
-        viewport.classList.remove("zoomed");
-        // รีเซ็ตการเลื่อนแกน X/Y เมื่อไม่ได้ซูม
-        viewport.scrollLeft = 0;
-        viewport.scrollTop = 0;
+    if (viewport) {
+        if (currentZoom > 100) {
+            viewport.classList.add("zoomed");
+        } else {
+            viewport.classList.remove("zoomed");
+            // รีเซ็ตการเลื่อนแกน X/Y เมื่อไม่ได้ซูม
+            viewport.scrollLeft = 0;
+            viewport.scrollTop = 0;
+        }
     }
 }
 
@@ -931,7 +966,7 @@ function resetZoom() {
     if (width < 850) {
         // เล็กกว่าแผ่น A4 ให้สเกลลดหลั่นย่อลงพอดี
         const percent = Math.floor((width - 60) / 800 * 100);
-        setZoom(percent < 50 ? 50 : percent);
+        setZoom(percent < 30 ? 30 : percent);
     } else {
         setZoom(100);
     }
@@ -1391,7 +1426,7 @@ function setupSettingsImageUploads() {
 }
 
 function setupSettingsPDFUploads() {
-    // ระบบเลือกอัปโหลดไฟล์ PDF จากแผงควบคุมหลักในโมดอล
+    // ระบบเลือกอัปโหลดไฟล์รูปภาพสำหรับดาวน์โหลด จากแผงควบคุมหลักในโมดอล
     const pdfPickers = document.querySelectorAll(".cfg-pdf-picker");
     pdfPickers.forEach(picker => {
         picker.addEventListener("change", async (e) => {
@@ -1402,12 +1437,12 @@ function setupSettingsPDFUploads() {
         });
     });
 
-    // ปุ่มรีเซ็ต PDF รายตัว
+    // ปุ่มรีเซ็ตรูปภาพสำหรับดาวน์โหลดรายตัว
     const resetButtons = document.querySelectorAll(".btn-reset-pdf");
     resetButtons.forEach(btn => {
         btn.addEventListener("click", async () => {
             const idx = parseInt(btn.getAttribute("data-idx"));
-            if (confirm(`คุณต้องการลบไฟล์ PDF ที่อัปโหลดและสลับกลับไปใช้ใบความรู้มาตรฐานสำหรับวันสำคัญนี้ใช่หรือไม่?`)) {
+            if (confirm(`คุณต้องการลบรูปภาพสำหรับดาวน์โหลดที่อัปโหลดและสลับกลับไปใช้รูปภาพมาตรฐานสำหรับวันสำคัญนี้ใช่หรือไม่?`)) {
                 if (useCloudMode) {
                     try {
                         const res = await fetch("/api/upload", {
@@ -1428,6 +1463,9 @@ function setupSettingsPDFUploads() {
                     }
                 } else {
                     await deleteCustomPDF(idx);
+                    const updateObj = {};
+                    updateObj[`hasCustomPDF_${idx}`] = false;
+                    await saveSettings(updateObj);
                 }
                 
                 await updateModalPDFStatuses();
@@ -1443,13 +1481,13 @@ function setupSettingsPDFUploads() {
 }
 
 async function handlePDFUpload(file, holidayIdx) {
-    if (file.type !== "application/pdf") {
-        alert("กรุณาเลือกเฉพาะไฟล์สกุล PDF (.pdf) เท่านั้น");
+    if (!file.type.startsWith("image/")) {
+        alert("กรุณาเลือกเฉพาะไฟล์รูปภาพ (.jpg, .jpeg, .png) เท่านั้น");
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        alert("ไฟล์ PDF มีขนาดใหญ่เกินไป (จำกัดสูงสุดไม่เกิน 5MB) กรุณาใช้ไฟล์บีบอัดขนาดเพื่อประสิทธิภาพที่ดียิ่งขึ้น");
+        alert("ไฟล์รูปภาพมีขนาดใหญ่เกินไป (จำกัดสูงสุดไม่เกิน 5MB)");
         return;
     }
 
@@ -1478,6 +1516,9 @@ async function handlePDFUpload(file, holidayIdx) {
                 await saveSettings(updatedSettings);
             } else {
                 await saveCustomPDF(holidayIdx, base64);
+                const updatedSettings = {};
+                updatedSettings[`hasCustomPDF_${holidayIdx}`] = true;
+                await saveSettings(updatedSettings);
             }
 
             await updateModalPDFStatuses();
@@ -1488,7 +1529,7 @@ async function handlePDFUpload(file, holidayIdx) {
                 await loadPDFViewer(holidayIdx);
             }
 
-            alert(`อัปโหลดไฟล์ PDF สำหรับ ${HOLIDAYS_DATA[holidayIdx].title} สำเร็จ!`);
+            alert(`อัปโหลดรูปภาพดาวน์โหลดสำหรับ ${HOLIDAYS_DATA[holidayIdx].title} สำเร็จ!`);
         } catch (err) {
             console.error(err);
             alert("เกิดข้อผิดพลาดในการบันทึกไฟล์: " + err.message);
@@ -1599,29 +1640,50 @@ async function handleWorksheetImageUpload(file, holidayIdx) {
 // ==========================================================================
 // 11. DOWNLOAD & PRINTING LOGIC FOR WORKSHEETS
 // ==========================================================================
+function getDefaultDownloadImagePath(idx) {
+    const names = [
+        "วันมา",
+        "วันวิสาข",
+        "วันอาสาฬ",
+        "วันเข้า",
+        "วันออก",
+        "วันอัฐมี"
+    ];
+    return `photo/${names[idx]}.jpg`;
+}
+
 async function downloadPDFWorksheet() {
     const holidayIdx = currentHolidayIndex;
     const data = HOLIDAYS_DATA[holidayIdx];
 
     const link = document.createElement("a");
+    let fileUrl = "";
+    let fileName = "";
+
     if (useCloudMode) {
         if (appSettings[`hasCustomPDF_${holidayIdx}`]) {
-            link.href = `/api/file?key=pdf_${holidayIdx}`;
-            link.download = `${data.title}_ใบความรู้ครูผู้สอน.pdf`;
+            fileUrl = `/api/file?key=pdf_${holidayIdx}`;
+            fileName = `${data.title}_ใบงานดาวน์โหลด.jpg`;
         } else {
-            link.href = getDefaultPDFPath(holidayIdx);
-            link.download = `${data.title}.pdf`;
+            fileUrl = getDefaultDownloadImagePath(holidayIdx);
+            fileName = `${data.title}.jpg`;
         }
     } else {
-        const customPDFBase64 = await getCustomPDF(holidayIdx);
-        if (customPDFBase64) {
-            link.href = customPDFBase64;
-            link.download = `${data.title}_ใบความรู้ครูผู้สอน.pdf`;
+        const customImgBase64 = await getCustomPDF(holidayIdx);
+        if (customImgBase64) {
+            fileUrl = customImgBase64;
+            let ext = "jpg";
+            if (customImgBase64.startsWith("data:image/png")) ext = "png";
+            else if (customImgBase64.startsWith("data:image/webp")) ext = "webp";
+            fileName = `${data.title}_ใบงานดาวน์โหลด.${ext}`;
         } else {
-            link.href = getDefaultPDFPath(holidayIdx);
-            link.download = `${data.title}.pdf`;
+            fileUrl = getDefaultDownloadImagePath(holidayIdx);
+            fileName = `${data.title}.jpg`;
         }
     }
+    
+    link.href = fileUrl;
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

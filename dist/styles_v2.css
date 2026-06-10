@@ -1048,14 +1048,14 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     padding: 30px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .pdf-canvas-wrapper {
     position: relative;
-    transform-origin: top center;
-    transition: transform 0.1s ease-out;
+    margin: auto;
+    transition: width 0.1s ease-out;
 }
 
 /* Grab to Pan functionality */
@@ -1817,4 +1817,98 @@ h1, h2, h3, h4, h5, h6 {
         page-break-inside: avoid;
         background-color: #FFFFFF !important;
     }
+}
+
+/* ==========================================================================
+   UPDATES FOR DOWNLOAD BUTTON & STUDY BUTTONS & ZOOM CONTAINER
+   ========================================================================== */
+
+/* Circular Download Button next to Zoom Reset button */
+.btn-circle-download {
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-accent-amber) !important;
+    color: var(--color-bg-white) !important;
+    border: none !important;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-circle-download:hover {
+    background-color: var(--color-accent-amber-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 169, 60, 0.4);
+}
+
+.btn-circle-download:active {
+    transform: translateY(0);
+}
+
+.btn-circle-download .icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 !important;
+}
+
+/* Custom colors for 5 holidays study buttons */
+.btn-study.btn-visakha {
+    background-color: #e67d84 !important;
+    border-color: #e67d84 !important;
+    color: var(--color-bg-white) !important;
+}
+.btn-study.btn-visakha:hover {
+    background-color: #d1646b !important;
+    border-color: #d1646b !important;
+    box-shadow: 0 4px 12px rgba(230, 125, 132, 0.4) !important;
+}
+
+.btn-study.btn-asanha {
+    background-color: #4077b6 !important;
+    border-color: #4077b6 !important;
+    color: var(--color-bg-white) !important;
+}
+.btn-study.btn-asanha:hover {
+    background-color: #315e93 !important;
+    border-color: #315e93 !important;
+    box-shadow: 0 4px 12px rgba(64, 119, 182, 0.4) !important;
+}
+
+.btn-study.btn-khao-phansa {
+    background-color: #4f763b !important;
+    border-color: #4f763b !important;
+    color: var(--color-bg-white) !important;
+}
+.btn-study.btn-khao-phansa:hover {
+    background-color: #3d5c2d !important;
+    border-color: #3d5c2d !important;
+    box-shadow: 0 4px 12px rgba(79, 118, 59, 0.4) !important;
+}
+
+.btn-study.btn-ok-phansa {
+    background-color: #e78319 !important;
+    border-color: #e78319 !important;
+    color: var(--color-bg-white) !important;
+}
+.btn-study.btn-ok-phansa:hover {
+    background-color: #c97112 !important;
+    border-color: #c97112 !important;
+    box-shadow: 0 4px 12px rgba(231, 131, 25, 0.4) !important;
+}
+
+.btn-study.btn-athami {
+    background-color: #886034 !important;
+    border-color: #886034 !important;
+    color: var(--color-bg-white) !important;
+}
+.btn-study.btn-athami:hover {
+    background-color: #6e4d27 !important;
+    border-color: #6e4d27 !important;
+    box-shadow: 0 4px 12px rgba(136, 96, 52, 0.4) !important;
 }
