@@ -472,7 +472,7 @@ const DEFAULT_SETTINGS = {
     schoolName: "โรงเรียนอ่างศิลาพิทยาคม",
     subjectTitle: "สังคมศึกษา BY Kru.Piee",
     welcomeText: "เรื่อง \"วันสำคัญทางศาสนาพุทธ\" สื่อการเรียนรู้ที่รวบรวมเนื้อหา ใบงาน และโปสเตอร์ความรู้ เพื่อพัฒนาการเรียนรู้ของผู้เรียนอย่างสร้างสรรค์",
-    teacherAvatar: "photo/4011.jpg",
+    teacherAvatar: "photo/ครูตุ๊ก.jfif",
     logoImg: "photo/LOGO.png",
     bannerImg: "assets/banner.png",
     teacherPassword: "5018",
