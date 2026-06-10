@@ -1,0 +1,10 @@
+.tools
+.git
+.system_generated
+node_modules
+setup_tools.ps1
+verify.ps1
+env.ps1
+task.md
+implementation_plan.md
+walkthrough.md
