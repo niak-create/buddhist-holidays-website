@@ -1,0 +1,8 @@
+# wrangler.toml
+name = "buddhist-holidays-website"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "BUDDHIST_HOLIDAYS_KV"
+id = "5d972b70a5e5450bb7f3d0269f623168"
+preview_id = "5d972b70a5e5450bb7f3d0269f623168"
